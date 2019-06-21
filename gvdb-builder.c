@@ -525,7 +525,7 @@ gvdb_table_write_contents (GHashTable   *table,
 }
 
 typedef struct {
-  GString *contents;
+  GString *contents;  /* (owned) */
   GFile *file;
 } WriteContentsData;
 
