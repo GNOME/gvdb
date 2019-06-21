@@ -601,7 +601,7 @@ gvdb_table_write_contents_async (GHashTable          *table,
   g_file_replace_contents_async (file, str->str, str->len,
                                  NULL, FALSE,
                                  G_FILE_CREATE_PRIVATE | G_FILE_CREATE_REPLACE_DESTINATION,
-                                 cancellable, replace_contents_cb, task);
+                                 cancellable, replace_contents_cb, g_steal_pointer (&task));
 }
 
 gboolean
