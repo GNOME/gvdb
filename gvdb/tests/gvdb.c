@@ -23,7 +23,7 @@ test_gvdb_nested_keys (void)
   GVariant *value;
   guint item_id;
   char *key;
-  const char *DB_FILE = "./test_nested_keys.gvdb";
+  char *db_file = g_build_filename (g_get_tmp_dir (), "test_nested_keys.gvdb", NULL);
   GError *local_error = NULL;
   gboolean retval;
 
@@ -40,14 +40,14 @@ test_gvdb_nested_keys (void)
       g_free (key);
     }
 
-  retval = gvdb_table_write_contents (root_table, DB_FILE, FALSE, &local_error);
+  retval = gvdb_table_write_contents (root_table, db_file, FALSE, &local_error);
   g_assert_no_error (local_error);
   g_assert_true (retval);
 
   g_hash_table_unref (ns_table);
   g_hash_table_unref (root_table);
 
-  root_level = gvdb_table_new (DB_FILE, TRUE, &local_error);
+  root_level = gvdb_table_new (db_file, TRUE, &local_error);
   g_assert_no_error (local_error);
   g_assert_nonnull (root_level);
 
@@ -70,7 +70,8 @@ test_gvdb_nested_keys (void)
 
   gvdb_table_free (root_level);
   gvdb_table_free (ns_level);
-  remove_file (DB_FILE);
+  remove_file (db_file);
+  g_free (db_file);
 }
 
 static void
@@ -110,39 +111,43 @@ simple_test (const gchar *filename,
 static void
 test_gvdb_byteswapped (void)
 {
-  const gchar *DB_FILE = "./test_byteswapped.gvdb";
+  char *db_file = g_build_filename (g_get_tmp_dir (), "test_byteswapped.gvdb", NULL);
 
-  simple_test (DB_FILE, TRUE);
+  simple_test (db_file, TRUE);
 
-  remove_file (DB_FILE);
+  remove_file (db_file);
+  g_free (db_file);
 }
 
 static void
 test_gvdb_flat_strings (void)
 {
-  const gchar *DB_FILE = "./test_flat_strings.gvdb";
+  char *db_file = g_build_filename (g_get_tmp_dir (), "test_flat_strings.gvdb", NULL);
 
-  simple_test (DB_FILE, FALSE);
+  simple_test (db_file, FALSE);
 
-  remove_file (DB_FILE);
+  remove_file (db_file);
+  g_free (db_file);
 }
 
 static void
 test_gvdb_corrupted_file (void)
 {
+  char *db_file = g_build_filename (g_get_tmp_dir (), "test_invalid.gvdb", NULL);
   GError *local_error = NULL;
 
-  g_file_set_contents ("./test_invalid.gvdb",
+  g_file_set_contents (db_file,
                        "Just a bunch of rubbish to fill a text file and try to open it"
                        "as a gvdb and check the error is correctly reported",
                        -1, &local_error);
   g_assert_no_error (local_error);
 
-  gvdb_table_new ("./test_invalid.gvdb", TRUE, &local_error);
+  gvdb_table_new (db_file, TRUE, &local_error);
   g_assert_error (local_error, G_FILE_ERROR, G_FILE_ERROR_INVAL);
   g_clear_error (&local_error);
 
-  remove_file ("./test_invalid.gvdb");
+  remove_file (db_file);
+  g_free (db_file);
 }
 
 
@@ -150,7 +155,7 @@ int
 main (int    argc,
       char **argv)
 {
-  g_test_init (&argc, &argv, NULL);
+  g_test_init (&argc, &argv, G_TEST_OPTION_ISOLATE_DIRS, NULL);
 
   g_test_add_func ("/gvdb/flat_strings", test_gvdb_flat_strings);
   g_test_add_func ("/gvdb/nested_keys", test_gvdb_nested_keys);
