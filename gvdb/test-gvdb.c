@@ -146,9 +146,9 @@ test_gvdb_corrupted_file (void)
 }
 
 
-gint
-main (gint    argc,
-      gchar **argv)
+int
+main (int    argc,
+      char **argv)
 {
   g_test_init (&argc, &argv, NULL);
 
