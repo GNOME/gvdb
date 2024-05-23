@@ -526,6 +526,8 @@ gvdb_table_get_contents (GHashTable     *table,
   str_len = str->len;
   res = g_bytes_new_take (g_string_free (str, FALSE), str_len);
 
+  file_builder_free (fb);
+
   return res;
 }
 
