@@ -21,7 +21,7 @@ test_gvdb_nested_keys (void)
   GvdbTable *root_level, *ns_level;
   char **keys;
   GVariant *value;
-  uint32_t  item_id;
+  guint item_id;
   char *key;
   const char *DB_FILE = "./test_nested_keys.gvdb";
   GError *local_error = NULL;
