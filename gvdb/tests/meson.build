@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024, Carlos Garnacho
+# SPDX-FileCopyrightText: 2024 Carlos Garnacho
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 gvdb_test_exec = executable(

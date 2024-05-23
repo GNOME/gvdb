@@ -1,4 +1,4 @@
-/* SPDX-FileCopyrightText: 2011, Nokia
+/* SPDX-FileCopyrightText: 2011 Nokia
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 

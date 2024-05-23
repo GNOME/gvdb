@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Endless OS Foundation, LLC
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
 project('gvdb', 'c',
     version: '0.0',
     meson_version: '>=0.54.0',
