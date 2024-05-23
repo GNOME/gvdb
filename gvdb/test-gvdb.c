@@ -10,7 +10,7 @@
 static void
 remove_file (const gchar *filename)
 {
-  g_assert_true (unlink (filename) == 0);
+  g_assert_no_errno (unlink (filename));
 }
 
 static void
@@ -24,6 +24,8 @@ test_gvdb_nested_keys (void)
   uint32_t  item_id;
   char *key;
   const char *DB_FILE = "./test_nested_keys.gvdb";
+  GError *local_error = NULL;
+  gboolean retval;
 
   root_table = gvdb_hash_table_new (NULL, NULL);
 
@@ -38,19 +40,22 @@ test_gvdb_nested_keys (void)
       g_free (key);
     }
 
-  g_assert_true (gvdb_table_write_contents (root_table, DB_FILE, FALSE, NULL));
+  retval = gvdb_table_write_contents (root_table, DB_FILE, FALSE, &local_error);
+  g_assert_no_error (local_error);
+  g_assert_true (retval);
 
   g_hash_table_unref (ns_table);
   g_hash_table_unref (root_table);
 
-  root_level = gvdb_table_new (DB_FILE, TRUE, NULL);
-  g_assert_true (root_level);
+  root_level = gvdb_table_new (DB_FILE, TRUE, &local_error);
+  g_assert_no_error (local_error);
+  g_assert_nonnull (root_level);
 
   ns_level = gvdb_table_get_table (root_level, "namespaces");
-  g_assert_true (ns_level);
+  g_assert_nonnull (ns_level);
 
   keys = gvdb_table_list (ns_level, "");
-  g_assert_true (keys);
+  g_assert_nonnull (keys);
   g_assert_cmpint (g_strv_length (keys), ==, 3);
   for (item_id = 0; item_id < 3; item_id++)
     {
@@ -69,26 +74,31 @@ test_gvdb_nested_keys (void)
 
 static void
 simple_test (const gchar *filename,
-	     gboolean     use_byteswap)
+             gboolean     use_byteswap)
 {
   GHashTable *table;
   GvdbTable  *read;
   GVariant   *value;
   GVariant   *expected;
+  GError *local_error = NULL;
+  gboolean retval;
 
   table = gvdb_hash_table_new (NULL, "level1");
   gvdb_hash_table_insert_string (table, "key1", "here just a flat string");
-  g_assert_true (gvdb_table_write_contents (table, filename, use_byteswap, NULL));
+  retval = gvdb_table_write_contents (table, filename, use_byteswap, &local_error);
+  g_assert_no_error (local_error);
+  g_assert_true (retval);
   g_hash_table_unref (table);
 
-  read = gvdb_table_new (filename, TRUE, NULL);
-  g_assert_true (read);
+  read = gvdb_table_new (filename, TRUE, &local_error);
+  g_assert_no_error (local_error);
+  g_assert_nonnull (read);
   g_assert_true (gvdb_table_is_valid (read));
 
   g_assert_true (gvdb_table_has_value (read, "key1"));
   value = gvdb_table_get_value (read, "key1");
   expected = g_variant_new_string ("here just a flat string");
-  g_assert_true (g_variant_equal (value, expected));
+  g_assert_cmpvariant (value, expected);
 
   g_variant_unref (expected);
   g_variant_unref (value);
@@ -119,15 +129,16 @@ test_gvdb_flat_strings (void)
 static void
 test_gvdb_corrupted_file (void)
 {
-  GError *error = NULL;
+  GError *local_error = NULL;
 
   g_file_set_contents ("./test_invalid.gvdb",
                        "Just a bunch of rubbish to fill a text file and try to open it"
                        "as a gvdb and check the error is correctly reported",
-                       -1, NULL);
+                       -1, &local_error);
+  g_assert_no_error (local_error);
 
-  gvdb_table_new ("./test_invalid.gvdb", TRUE, &error);
-  g_assert_true (error);
+  gvdb_table_new ("./test_invalid.gvdb", TRUE, &local_error);
+  g_assert_error (local_error, G_FILE_ERROR, G_FILE_ERROR_INVAL);
 
   remove_file ("./test_invalid.gvdb");
 }
