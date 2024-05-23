@@ -64,6 +64,7 @@ test_gvdb_nested_keys (void)
       value = gvdb_table_get_raw_value (ns_level, key);
       g_assert_cmpstr (g_variant_get_string (value, NULL), ==, "http://some.cool.ns");
       g_free (key);
+      g_variant_unref (value);
     }
   g_strfreev (keys);
 
@@ -139,6 +140,7 @@ test_gvdb_corrupted_file (void)
 
   gvdb_table_new ("./test_invalid.gvdb", TRUE, &local_error);
   g_assert_error (local_error, G_FILE_ERROR, G_FILE_ERROR_INVAL);
+  g_clear_error (&local_error);
 
   remove_file ("./test_invalid.gvdb");
 }
