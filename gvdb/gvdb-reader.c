@@ -1,6 +1,8 @@
 /*
  * Copyright © 2010 Codethink Limited
  *
+ * SPDX-License-Identifier: LGPL-2.1-or-later
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -610,7 +612,7 @@ gvdb_table_value_from_item (GvdbTable                   *table,
  * You should call g_variant_unref() on the return result when you no
  * longer require it.
  *
- * Returns: a #GVariant, or %NULL
+ * Returns: (transfer full) (nullable): a #GVariant, or %NULL
  **/
 GVariant *
 gvdb_table_get_value (GvdbTable    *file,
@@ -646,7 +648,7 @@ gvdb_table_get_value (GvdbTable    *file,
  * This call is equivalent to gvdb_table_get_value() except that it
  * never byteswaps the value.
  *
- * Returns: a #GVariant, or %NULL
+ * Returns: (transfer full) (nullable): a #GVariant, or %NULL
  **/
 GVariant *
 gvdb_table_get_raw_value (GvdbTable   *table,

@@ -1,6 +1,8 @@
 /*
  * Copyright © 2010 Codethink Limited
  *
+ * SPDX-License-Identifier: LGPL-2.1-or-later
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -525,6 +527,8 @@ gvdb_table_get_contents (GHashTable     *table,
 
   str_len = str->len;
   res = g_bytes_new_take (g_string_free (str, FALSE), str_len);
+
+  file_builder_free (fb);
 
   return res;
 }

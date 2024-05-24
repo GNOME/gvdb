@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Endless OS Foundation, LLC
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
 project('gvdb', 'c',
     version: '0.0',
     meson_version: '>=0.54.0',
@@ -14,13 +17,4 @@ gvdb_dep = declare_dependency(
 )
 meson.override_dependency('gvdb', gvdb_dep)
 
-gvdb_test_exec = executable(
-  'test-gvdb',
-  files('gvdb/test-gvdb.c'),
-  dependencies: [dependency('gio-2.0'), gvdb_dep],
-)
-
-test(
-  'gvdb',
-  gvdb_test_exec,
-)
+subdir('gvdb/tests')
