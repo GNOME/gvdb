@@ -582,7 +582,7 @@ write_contents_data_free (WriteContentsData *data)
 }
 
 static void
-replace_contents_cb (GObject      *source_object,
+replace_contents_cb (GObject      *source_object G_GNUC_UNUSED,
                      GAsyncResult *result,
                      gpointer      user_data)
 {
