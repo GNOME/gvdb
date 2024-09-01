@@ -526,13 +526,13 @@ gvdb_table_list (GvdbTable   *file,
 
       if (itemno < file->n_hash_items)
         {
-          const struct gvdb_hash_item *item;
+          const struct gvdb_hash_item *child_item;
           const gchar *string;
           gsize strsize;
 
-          item = file->hash_items + itemno;
+          child_item = file->hash_items + itemno;
 
-          string = gvdb_table_item_get_key (file, item, &strsize);
+          string = gvdb_table_item_get_key (file, child_item, &strsize);
 
           if (string != NULL)
             strv[i] = g_strndup (string, strsize);
