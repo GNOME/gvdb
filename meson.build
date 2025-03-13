@@ -6,6 +6,8 @@ project('gvdb', 'c',
     meson_version: '>=1.1',
 )
 
+cc = meson.get_compiler('c')
+
 libgvdb_sources = files(
     'gvdb/gvdb-builder.c',
     'gvdb/gvdb-reader.c',
