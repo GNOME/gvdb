@@ -5,11 +5,16 @@ gvdb_tests = {
   'gvdb': {},
 }
 
+if cc.get_id() != 'msvc'
+  gvdb_tests += {'autoptr': {}}
+endif
+
 test_env = environment()
 test_env.set('G_TEST_SRCDIR', meson.current_source_dir())
 test_env.set('G_TEST_BUILDDIR', meson.current_build_dir())
 
 test_deps = [
+  dependency('glib-2.0', version: '>= 2.44'),
   dependency('gio-2.0'),
   gvdb_dep,
 ]
