@@ -8,6 +8,16 @@ project('gvdb', 'c',
 
 cc = meson.get_compiler('c')
 
+libgvdb_includes = include_directories('.')
+
+# In order for a consumer of gvdb to build & link to a libgvdb static lib, the
+# headers need to be exported separately, as they are not exposed by `link_with`.
+# See https://github.com/mesonbuild/meson/issues/10543
+gvdb_include = declare_dependency(
+  include_directories: libgvdb_includes,
+)
+meson.override_dependency('gvdb-include', gvdb_include)
+
 libgvdb_sources = files(
     'gvdb/gvdb-builder.c',
     'gvdb/gvdb-reader.c',
@@ -15,7 +25,7 @@ libgvdb_sources = files(
 
 gvdb_dep = declare_dependency(
   sources: libgvdb_sources,
-  include_directories: include_directories('.'),
+  include_directories: libgvdb_includes,
 )
 meson.override_dependency('gvdb', gvdb_dep)
 
